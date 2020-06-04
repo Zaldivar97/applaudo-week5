@@ -13,6 +13,22 @@ class Tag(models.Model):
     def __str__(self):
         return self.name
 
+
+class PostQuerySet(models.QuerySet):
+    def most_popular(self):
+        return self.filter(likes__gt=25)
+
+
+class PostModelManager(models.Manager):
+    def get_queryset(self):
+        return PostQuerySet(self.model, using=self._db)
+
+    def all(self, *args, **kwargs):
+        qs = super(PostModelManager, self).all(
+            *args, **kwargs).filter(active=True)
+        return qs
+
+
 class Post(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     tags = models.ManyToManyField(Tag)
@@ -22,6 +38,7 @@ class Post(models.Model):
     active = models.BooleanField(default=True)
     created_at = models.DateField(auto_now_add=True)
     slug = models.SlugField()
+    objects = PostModelManager()
 
     def comments(self):
         return self.comment_set.all()
@@ -31,7 +48,10 @@ class Post(models.Model):
 
     def get_absolute_url(self):
         return reverse('post_detail', kwargs={'slug': self.slug})
-    
+
+    class Meta:
+        ordering = ['id']
+
 
 class Comment(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -43,8 +63,13 @@ class Comment(models.Model):
     def __str__(self):
         return f'Comment #{self.id}'
 
+
 def pre_save_post(sender, instance, *args, **kwargs):
     slug = slugify(instance.title)
     instance.slug = slug
 
+
 pre_save.connect(pre_save_post, sender=Post)
+
+
+
