@@ -1,0 +1,77 @@
+
+*{
+box-sizing: border-box;    
+}
+
+.wrapper{
+    display: grid;
+    height: 100vh;
+    grid-template-columns: 1fr 8fr;
+    grid-template-rows: 1fr 8fr;
+    grid-template-areas: "header header"
+                         "nav main";
+                         padding: 0 2em;
+    
+}
+#button-wrapper{
+  text-align: right;
+    flex-grow: 7;
+}
+#title{
+        flex-grow: 3;
+}
+
+header{
+    grid-area: header;
+    background-color:#fff;
+    display: flex;
+    align-items: center;
+
+}
+button{
+    background-color: white;
+    border: 1px solid dodgerblue;
+    border-radius: 10%;
+    color: dodgerblue;
+    margin: 1em;
+    padding: 0.5em;
+    width: 5em;
+}
+button:hover{
+    color: white;
+    background-color: dodgerblue;
+    cursor: pointer;
+}
+header div{
+color: dodgerblue;
+font-size: 2em;
+
+}
+main{
+    grid-area: main;
+    margin-left: 3em;
+    padding: 0 2em;
+}
+nav{
+    grid-area: nav;
+    margin: 2em 0;
+    display: flex;
+    flex-direction: column;
+    
+}
+nav div{
+    margin-bottom: 2em;
+    width: 100%;
+    text-align: right;
+    font-size: 1em;
+    padding: 0.5em 1em 0.5em 0;
+    border-right: 2px solid dodgerblue;
+}
+nav div:hover{
+    cursor: pointer;
+    color: dodgerblue;
+}
+.post-title:hover > a{
+    cursor: pointer;
+    color: dodgerblue;
+}

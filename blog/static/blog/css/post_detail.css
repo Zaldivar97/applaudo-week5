@@ -1,0 +1,24 @@
+#post-wrapper > p{
+    font-size: 2em;
+}
+.comment{
+    padding-left: 2em;
+}
+.comment p{
+    font-size: 1em;
+    color: dodgerblue;
+}
+#post-wrapper{
+    padding: 0 2em;
+}
+.content, .comment-content{
+    width: 100%;
+}
+#comment-wrapper > p{
+    padding: 0.5em;
+    background-color: #ccc;
+}
+#likes{
+    flex-grow: 2;
+    color: dodgerblue;
+}

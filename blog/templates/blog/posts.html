@@ -1,6 +1,20 @@
-<h1>Posts</h1>
-{% for post in object_list %}
-<li>{{post.title}}</li>
-{% endfor %}
+{% extends "base.html" %}
 
+{% block content %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'blog/css/style.css' %}">
+<div id="posts-wrapper">
+    {% for post in object_list %}
+    <div class="post">
+        <div class="post-title">
+        <a href="{{post.get_absolute_url}}">{{post.title}}</a>
+        <div class='post-meta'>
+        <div class="post-user">By {{post.user.username}}</div> -
+        <div class="likes">{{post.likes}} likes</div></div>
+        </div>
+        
+    </div>
+    {% endfor %}
+</div>
 
+{% endblock %}

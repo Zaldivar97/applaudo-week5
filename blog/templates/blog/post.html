@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% block content %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'blog/css/post_detail.css' %}">
+<div id="post-wrapper">
+    <p>{{object.title}}</p>
+    <div class="content">
+        {{object.content}}
+    </div>
+    <div id="likes">{{object.likes}} likes</div>
+    <div id="comment-wrapper">
+        <p>Comments</p>
+        {% for comment in object.comments %}
+        <div class="comment">
+            <p>{{comment.user.username}}</p>
+            <div class="comment-content">
+                {{comment.content}}
+            </div>
+        </div>
+        {% endfor %}       
+    </div>
+</div>
+{% endblock %}
