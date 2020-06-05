@@ -30,11 +30,14 @@ class PostModelManager(models.Manager):
 
 
 class Post(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(
+        User, on_delete=models.CASCADE,
+        related_name="posts"
+    )
     tags = models.ManyToManyField(Tag)
     title = models.CharField(max_length=200)
     content = models.TextField()
-    likes = models.IntegerField(default=0)
+    likes = models.ManyToManyField(User, related_name="likes")
     active = models.BooleanField(default=True)
     created_at = models.DateField(auto_now_add=True)
     slug = models.SlugField()
@@ -43,25 +46,33 @@ class Post(models.Model):
     def comments(self):
         return self.comment_set.all()
 
+    def likes_count(self):
+        return self.likes.all().count()
+
     def __str__(self):
         return self.title
 
     def get_absolute_url(self):
-        return reverse('post_detail', kwargs={'slug': self.slug})
+        return reverse("post_detail", kwargs={"slug": self.slug})
 
     class Meta:
-        ordering = ['id']
+        ordering = ["id"]
 
 
 class Comment(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(
+        User, on_delete=models.CASCADE,
+        related_name="comments"
+    )
     post = models.ForeignKey(Post, on_delete=models.CASCADE)
+    likes = models.ManyToManyField(User, related_name="comment_likes")
     content = models.TextField()
     created_at = models.DateField(auto_now_add=True)
-    likes = models.IntegerField(default=0)
+
+    
 
     def __str__(self):
-        return f'Comment #{self.id}'
+        return f"Comment #{self.id}"
 
 
 def pre_save_post(sender, instance, *args, **kwargs):
@@ -70,6 +81,3 @@ def pre_save_post(sender, instance, *args, **kwargs):
 
 
 pre_save.connect(pre_save_post, sender=Post)
-
-
-

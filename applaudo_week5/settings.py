@@ -25,7 +25,7 @@ SECRET_KEY = 's&xsawa1)_#+%0tf4)y%-4^2a@u2s)^3i5ru-0je%b1w6=qms5'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['localhost']
 
 
 # Application definition
@@ -77,7 +77,7 @@ WSGI_APPLICATION = 'applaudo_week5.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'blog',
         'USER': 'applaudo',
         'PASSWORD': '123',

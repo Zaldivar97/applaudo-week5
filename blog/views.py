@@ -3,12 +3,15 @@ from django.views.generic import DetailView, ListView
 
 from .models import Post
 # Create your views here.
-class PostListPupular(ListView):
+
+
+class PostListPopular(ListView):
     model = Post
     template_name = 'blog/posts.html'
 
     def get_queryset(self):
         return super().get_queryset().most_popular()
+
 
 class PostListView(ListView):
     model = Post
@@ -20,6 +23,7 @@ class PostListView(ListView):
             queryset = Post.objects.filter(title__icontains=query)
             return queryset
         return super().get_queryset()
+
 
 class PostView(DetailView):
     model = Post
