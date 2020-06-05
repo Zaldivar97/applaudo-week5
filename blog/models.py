@@ -17,7 +17,7 @@ class Tag(models.Model):
 
 class PostQuerySet(models.QuerySet):
     def most_popular(self):
-        print(settings.LOGIN_URL)
+        #print(settings.LOGIN_URL)
         return self.filter(likes__gt=25)
 
 
@@ -26,8 +26,7 @@ class PostModelManager(models.Manager):
         return PostQuerySet(self.model, using=self._db)
 
     def all(self, *args, **kwargs):
-        qs = super(PostModelManager, self).all(
-            *args, **kwargs).filter(active=True)
+        qs = super().all(*args, **kwargs).filter(active=True)
         return qs
 
 
@@ -43,6 +42,7 @@ class Post(models.Model):
     active = models.BooleanField(default=True)
     created_at = models.DateField(auto_now_add=True)
     slug = models.SlugField()
+
     objects = PostModelManager()
 
     def comments(self):
@@ -64,7 +64,8 @@ class Post(models.Model):
 class Comment(models.Model):
     user = models.ForeignKey(
         User, on_delete=models.CASCADE,
-        related_name="comments"
+        related_name='comments',
+        verbose_name='Comment creator'
     )
     post = models.ForeignKey(Post, on_delete=models.CASCADE)
     likes = models.ManyToManyField(User, related_name="comment_likes")
@@ -72,7 +73,7 @@ class Comment(models.Model):
     created_at = models.DateField(auto_now_add=True)
 
     def __str__(self):
-        return f'#{self.id} ({self.post.title})'
+        return f'By {self.user}'
 
     class Meta:
         ordering = ["id"]

@@ -9,22 +9,22 @@
     <title>{% block title%}Blogging.io{% endblock %}</title>
     <script>
         function home(){
-            location.href = "/posts"
+            location.href = "{% url 'post_list' %}"
         }
         function popular(){
-            location.href = "/posts/most-popular"
+            location.href = "{% url 'post_popular' %}"
         }
         function about(){
-            location.href = "/about"
+            location.href = "{% url 'about' %}"
         }
         function login(){
-            location.href = "/accounts/login"
+            location.href = "{% url 'login' %}"
         }
         function logout(){
-            location.href = "/accounts/logout"
+            location.href = "{% url 'logout' %}"
         }
         function signup(){
-            location.href = "/accounts/signup"
+            location.href = "{% url 'signup' %}"
         }
         
     </script>
@@ -47,7 +47,7 @@
         </header>
         <nav>
             <div id="exclude">
-                <form method="GET" action="/posts">
+                <form method="GET" action="{% url 'post_list' %}">
                 <input type="text" name="q" placeholder="Search">
                 </form>
             </div>
