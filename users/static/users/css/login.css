@@ -1,0 +1,48 @@
+*{
+    box-sizing: border-box;    
+    }
+body{
+    height: 100vh;
+    width: 100vw;
+}
+div{
+    height: 100%;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
+form{
+    height: 50%;
+    width: 40%;
+    margin: 0 auto;
+    text-align: center;
+
+}
+.error{
+    padding: 1em;
+    text-align: center;
+    color: red;
+}
+
+p:not(.error){
+    color: dodgerblue;
+    font-size: 2em;
+    margin: 1em 0;
+    text-align: center;
+}
+input{
+    height: 15%;
+    width: 70%;
+    border: 1px solid dodgerblue;
+    margin: 1em 0;
+    padding: 1em;
+}
+input[type="submit"]{
+    color: dodgerblue;
+}
+input[type="submit"]:hover{
+    color: #fff;
+    background-color: dodgerblue;
+    cursor: pointer;
+}
