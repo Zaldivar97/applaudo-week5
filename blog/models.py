@@ -3,6 +3,7 @@ from django.db.models.signals import pre_save
 from django.db import models
 from django.urls import reverse
 from django.utils.text import slugify
+from django.conf import settings
 
 # Create your models here.
 
@@ -16,6 +17,7 @@ class Tag(models.Model):
 
 class PostQuerySet(models.QuerySet):
     def most_popular(self):
+        print(settings.LOGIN_URL)
         return self.filter(likes__gt=25)
 
 
@@ -69,10 +71,11 @@ class Comment(models.Model):
     content = models.TextField()
     created_at = models.DateField(auto_now_add=True)
 
-    
-
     def __str__(self):
-        return f"Comment #{self.id}"
+        return f'#{self.id} ({self.post.title})'
+
+    class Meta:
+        ordering = ["id"]
 
 
 def pre_save_post(sender, instance, *args, **kwargs):

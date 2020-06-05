@@ -6,7 +6,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{% static 'css/base.css' %}">
-    <title>{% block title%}Blogging data{% endblock %}</title>
+    <title>{% block title%}Blogging.io{% endblock %}</title>
     <script>
         function home(){
             location.href = "/posts"
@@ -17,14 +17,33 @@
         function about(){
             location.href = "/about"
         }
+        function login(){
+            location.href = "/accounts/login"
+        }
+        function logout(){
+            location.href = "/accounts/logout"
+        }
+        function signup(){
+            location.href = "/accounts/signup"
+        }
+        
     </script>
 </head>
 
 <body>
     <div class="wrapper">
         <header>
-            <div id="title">Blogging Data</div>
-            <div id="button-wrapper" ><button>Login</button></div>
+            <div id="title">Blogging.io</div>
+            <div id="button-wrapper" >
+            {% if  user.is_authenticated %}
+                        {{user.username}}
+            <button onclick='logout()'>Logout</button>
+            {% else %}
+            <button onclick='signup()'>Sign up</button>
+            <button onclick='login()'>Login</button>
+            {% endif %}
+            
+            </div>
         </header>
         <nav>
             <div id="exclude">
