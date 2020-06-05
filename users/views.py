@@ -2,10 +2,9 @@ from django.shortcuts import render, redirect
 from django.views.generic import RedirectView, FormView, CreateView
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.models import User
-from django.contrib.auth.forms import AuthenticationForm
 from django.urls import reverse_lazy
 
-from .forms import SignupForm
+from .forms import SignupForm, LoginForm
 
 # Create your views here.
 
@@ -25,7 +24,7 @@ class SignupView(CreateView):
 
 
 class LoginView(FormView):
-    form_class = AuthenticationForm
+    form_class = LoginForm
     template_name = 'users/login.html'
     success_url = reverse_lazy('post_list')
 
