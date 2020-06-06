@@ -3,6 +3,7 @@
 {% block content %}
 {% load static %}
 <link rel="stylesheet" href="{% static 'blog/css/style.css' %}">
+{% if object_list %}
 <div id="posts-wrapper">
     {% for post in object_list %}
     <div class="post">
@@ -16,5 +17,8 @@
     </div>
     {% endfor %}
 </div>
+{% else %}
+<h1>Nothing to show</h1>
+{% endif %}
 
 {% endblock %}
