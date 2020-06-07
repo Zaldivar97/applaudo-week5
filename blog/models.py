@@ -72,6 +72,9 @@ class Comment(models.Model):
     content = models.TextField()
     created_at = models.DateField(auto_now_add=True)
 
+    def likes_count(self):
+        return self.likes.all().count()
+        
     def __str__(self):
         return f'By {self.user}'
 
