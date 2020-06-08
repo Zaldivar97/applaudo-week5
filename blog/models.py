@@ -40,6 +40,7 @@ class Post(models.Model):
     content = models.TextField()
     likes = models.ManyToManyField(User, related_name="likes")
     active = models.BooleanField(default=True)
+    approved = models.BooleanField(default=False)
     created_at = models.DateField(auto_now_add=True)
     slug = models.SlugField()
 
@@ -68,8 +69,10 @@ class Comment(models.Model):
         verbose_name='Comment creator'
     )
     post = models.ForeignKey(Post, on_delete=models.CASCADE)
-    likes = models.ManyToManyField(User, related_name="comment_likes")
+    likes = models.ManyToManyField(User, related_name='comment_likes', blank=True)
     content = models.TextField()
+    flags = models.ManyToManyField(User, through='CommentReport')
+    approved = models.BooleanField(default=True)
     created_at = models.DateField(auto_now_add=True)
 
     def likes_count(self):
@@ -80,6 +83,12 @@ class Comment(models.Model):
 
     class Meta:
         ordering = ["id"]
+
+class CommentReport(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    comment = models.ForeignKey(Comment, on_delete=models.CASCADE)
+    reason = models.CharField(max_length=64)
+    created_at = models.DateField(auto_now_add=True)
 
 
 def pre_save_post(sender, instance, *args, **kwargs):

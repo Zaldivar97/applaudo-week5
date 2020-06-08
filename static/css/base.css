@@ -5,17 +5,14 @@ box-sizing: border-box;
 
 .wrapper{
     display: grid;
-    height: 100vh;
-    grid-template-columns: 1fr 8fr;
-    grid-template-rows: 1fr 8fr;
+    height: 100%;
+    grid-template-columns: 1fr minmax(200px, 8fr);;
+    grid-template-rows: 1fr 15fr;
     grid-template-areas: "header header"
                          "nav main";
                          padding: 0 2em;
-    
 }
-body{
-    position: relative;
-}
+
 #button-wrapper{
   text-align: right;
     flex-grow: 7;
