@@ -41,6 +41,8 @@ class PostView(DetailView):
             user = self.request.user
             user_like_exists = self.object.like_by_user_exists(user)
             Comment.user_logged_id = user.id
+        else:
+            Comment.user_logged_id = None
         context['like_exists'] = user_like_exists
         return context
 
