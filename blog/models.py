@@ -67,7 +67,7 @@ class Post(models.Model):
 
 
 class Comment(models.Model):
-    user_logged_id = 0
+    user_logged_id = None
     user = models.ForeignKey(
         User, on_delete=models.CASCADE,
         related_name='comments',
@@ -84,7 +84,8 @@ class Comment(models.Model):
         return self.likes.all().count()
 
     def like_by_user_exists(self):
-        return self.likes.filter(id=self.user_logged_id).exists()
+        if self.user_logged_id is not None:
+            return self.likes.filter(id=self.user_logged_id).exists()
 
     def __str__(self):
         return f'By {self.user}'
