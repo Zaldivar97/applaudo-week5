@@ -1,24 +1,25 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bloggin.io | Login</title>
 </head>
+
 <body>
-{% load static %}
-<link rel="stylesheet" href="{% static 'users/css/login.css' %}">
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'users/css/login.css' %}">
 
-    <div>                        
-    <p>Bloggin.io</p>
-
+    <div>
+        <p>Bloggin.io</p>
         <form method="post" role="form">
 
-        {% csrf_token %}
+            {% csrf_token %}
             {{ form.username }}
             {{ form.password }}
             {% block button %}
-                        <input type="submit" value="Login">
+            <input type="submit" value="Login">
 
             {% endblock  %}
             {% for error in form.errors.values %}
@@ -27,4 +28,5 @@
         </form>
     </div>
 </body>
+
 </html>

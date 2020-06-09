@@ -4,7 +4,6 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.forms import AuthenticationForm
 
 
-
 class SignupForm(UserCreationForm):
 
     def __init__(self, *args, **kwargs):
@@ -21,8 +20,9 @@ class SignupForm(UserCreationForm):
             'username': forms.fields.TextInput(attrs={'placeholder': 'Username'}),
         }
 
+
 class LoginForm(AuthenticationForm):
-      def __init__(self, *args, **kwargs):
+    def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['username'].widget = forms.TextInput(
             attrs={'placeholder': 'Username'})

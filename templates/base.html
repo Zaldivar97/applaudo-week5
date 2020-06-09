@@ -6,59 +6,65 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{% static 'css/base.css' %}">
-    <title>{% block title%}Blogging.io{% endblock %}</title>
+    <title>{% block title %}Blogging.io{% endblock %}</title>
     <script>
-        function home(){
+        function home() {
             location.href = "{% url 'post_list' %}"
         }
-        function popular(){
+
+        function popular() {
             location.href = "{% url 'post_popular' %}"
         }
-        function about(){
+
+        function about() {
             location.href = "{% url 'about' %}"
         }
-        function login(){
+
+        function login() {
             location.href = "{% url 'login' %}"
         }
-        function logout(){
+
+        function logout() {
             location.href = "{% url 'logout' %}"
         }
-        function signup(){
+
+        function signup() {
             location.href = "{% url 'signup' %}"
         }
-        
+
     </script>
 </head>
 
 <body>
-    <div class="wrapper">
-        <header>
-            <div id="title">Blogging.io</div>
-            <div id="button-wrapper" >
+<div class="wrapper">
+    <header>
+        <div id="title">Blogging.io</div>
+        <div id="button-wrapper">
             {% if  user.is_authenticated %}
-                        {{user.username}}
-            <button onclick='logout()'>Logout</button>
+                {{ user.username }}
+                <button onclick='logout()'>Logout</button>
             {% else %}
-            <button onclick='signup()'>Sign up</button>
-            <button onclick='login()'>Login</button>
+                <button onclick='signup()'>Sign up</button>
+                <button onclick='login()'>Login</button>
             {% endif %}
-            
-            </div>
-        </header>
-        <nav>
-            <div id="exclude">
-                <form method="GET" action="{% url 'post_list' %}">
+
+        </div>
+    </header>
+    <nav>
+        <div id="exclude">
+            <form method="GET" action="{% url 'post_list' %}">
                 <input type="text" name="q" placeholder="Search">
-                </form>
-            </div>
-            <div onclick="home()">Home</div>
-            <div onclick="popular()">Most Popular</div>
-            <div onclick="about()">About</div>
-        </nav>
-        <main class="content">
-            {% block content %}{% endblock %}
-        </main>
-    </div>
+            </form>
+        </div>
+        <div onclick="home()" class="option">Home</div>
+        <div onclick="popular()" class="option">Most Popular</div>
+        <div onclick="about()" class="option">About</div>
+    </nav>
+    <main class="content">
+        {% block content %}{% endblock %}
+    </main>
+</div>
+
 </body>
 
 </html>

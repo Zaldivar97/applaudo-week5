@@ -5,6 +5,7 @@ from django.urls import reverse
 from django.utils.text import slugify
 from django.conf import settings
 
+
 # Create your models here.
 
 
@@ -17,7 +18,7 @@ class Tag(models.Model):
 
 class PostQuerySet(models.QuerySet):
     def most_popular(self):
-        #print(settings.LOGIN_URL)
+        # print(settings.LOGIN_URL)
         return self.filter(likes__gt=25)
 
 
@@ -38,7 +39,7 @@ class Post(models.Model):
     tags = models.ManyToManyField(Tag)
     title = models.CharField(max_length=200)
     content = models.TextField()
-    likes = models.ManyToManyField(User, related_name="likes")
+    likes = models.ManyToManyField(User, related_name="likes", blank=True)
     active = models.BooleanField(default=True)
     approved = models.BooleanField(default=False)
     created_at = models.DateField(auto_now_add=True)
@@ -52,6 +53,9 @@ class Post(models.Model):
     def likes_count(self):
         return self.likes.all().count()
 
+    def like_by_user_exists(self, user):
+        return self.likes.filter(id=user.id).exists()
+
     def __str__(self):
         return self.title
 
@@ -63,6 +67,7 @@ class Post(models.Model):
 
 
 class Comment(models.Model):
+    user_logged_id = 0
     user = models.ForeignKey(
         User, on_delete=models.CASCADE,
         related_name='comments',
@@ -77,12 +82,16 @@ class Comment(models.Model):
 
     def likes_count(self):
         return self.likes.all().count()
-        
+
+    def like_by_user_exists(self):
+        return self.likes.filter(id=self.user_logged_id).exists()
+
     def __str__(self):
         return f'By {self.user}'
 
     class Meta:
         ordering = ["id"]
+
 
 class CommentReport(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
