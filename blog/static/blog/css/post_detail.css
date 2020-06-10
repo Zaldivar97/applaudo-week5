@@ -75,8 +75,7 @@
     color: #000 !important;
 }
 
-.likes {
-    color: dodgerblue;
+#post-wrapper > .likes {
     margin-top: 2em;
 }
 

@@ -1,13 +1,26 @@
 from django import template
-from django.views.generic import DetailView, ListView, View
-from django.views.generic.detail import SingleObjectMixin, BaseDetailView
+from django.views.generic import DetailView, ListView, CreateView
+from django.views.generic.detail import BaseDetailView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponseRedirect
 
-from .models import Post, Comment, User
+from .models import Post, Comment
+from .forms import PostCreateForm
 
 
 # Create your views here.
+
+class PostCreate(LoginRequiredMixin, CreateView):
+    model = Post
+    template_name = 'blog/new_post.html'
+    form_class = PostCreateForm
+
+    def form_valid(self, form):
+
+        post = form.instance
+        print('[WARNING]: ', post.__dict__)
+        post.user = self.request.user
+        return super().form_valid(form)
 
 
 class PostListPopular(ListView):

@@ -7,7 +7,7 @@
     display: grid;
     height: 100%;
     grid-template-columns: 1fr minmax(200px, 8fr);;
-    grid-template-rows: 1fr 15fr;
+    grid-template-rows: fit-content(1fr) 4fr;
     grid-template-areas: "header header"
                          "nav main";
     padding: 0 2em;
