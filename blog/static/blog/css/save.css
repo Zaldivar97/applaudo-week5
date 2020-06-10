@@ -1,0 +1,31 @@
+textarea{
+    height: 300px;
+}
+form{
+    height: auto;
+}
+input[type="text"]:not(#search){
+    padding: 1em;
+    width: 70%;
+}
+#id_tags{
+    list-style-type: none;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+}
+#id_tags li {
+    position: relative;
+    display: inline;
+    background-color: #ccc;
+    margin: 0 0.5em 0.5em 0;
+    padding: 0.5em;
+
+}
+form > .button{
+    padding: 1em!important;
+    width: 10%;
+}
+#id_tags li:hover{
+    background-color: dodgerblue;
+}

@@ -7,6 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{% static 'css/base.css' %}">
     <title>{% block title %}Blogging.io{% endblock %}</title>
+    {% block tiny %}{% endblock %}
     <script>
         function home() {
             location.href = "{% url 'post_list' %}"
@@ -41,19 +42,26 @@
         <div id="title">Blogging.io</div>
         <div id="button-wrapper">
             {% if  user.is_authenticated %}
-                {{ user.username }}
-                <button onclick='logout()'>Logout</button>
+
+                    <div class="dropdown">
+                        <button>{{ user.username }}</button>
+                        <div class="dropdown-content">
+                            <a href="{% url 'post_new' %}">New post</a>
+                            <a>Profile</a>
+                        </div>
+                    </div>
+                <button onclick="logout()" class="button">Logout</button>
             {% else %}
-                <button onclick='signup()'>Sign up</button>
-                <button onclick='login()'>Login</button>
+                <button onclick="signup()" class="button">Sign up</button>
+                <button onclick="login()" class="button">Login</button>
             {% endif %}
 
         </div>
     </header>
     <nav>
         <div id="exclude">
-            <form method="GET" action="{% url 'post_list' %}">
-                <input type="text" name="q" placeholder="Search">
+            <form method="GET" action="{% url 'post_list' %}" >
+                <input id="search" type="text" name="q" placeholder="Search">
             </form>
         </div>
         <div onclick="home()" class="option">Home</div>

@@ -4,7 +4,7 @@ from django.db import models
 from django.urls import reverse
 from django.utils.text import slugify
 from django.conf import settings
-
+from tinymce.models import HTMLField
 
 # Create your models here.
 
@@ -38,7 +38,7 @@ class Post(models.Model):
     )
     tags = models.ManyToManyField(Tag)
     title = models.CharField(max_length=200)
-    content = models.TextField()
+    content = HTMLField()
     likes = models.ManyToManyField(User, related_name="likes", blank=True)
     active = models.BooleanField(default=True)
     approved = models.BooleanField(default=False)

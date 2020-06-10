@@ -18,6 +18,44 @@
     flex-grow: 7;
 }
 
+.dropdown {
+    position: relative;
+    display: inline-flex;
+}
+.dropdown button{
+    background-color: inherit;
+    font-size: 20px;
+    color: dodgerblue;
+    border: none;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    top: 0.2em;
+    background-color: #f1f1f1;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+    z-index: 1;
+}
+
+.dropdown-content a {
+    color: black;
+    text-decoration: none;
+    display: block;
+    font-size: 15px;
+    text-align: left;
+    padding: 1em;
+}
+
+.dropdown-content a:hover {
+    background-color: dodgerblue;
+}
+
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+
 #title {
     flex-grow: 3;
 }
@@ -32,17 +70,22 @@ header {
 
 }
 
-header button {
+.button {
     background-color: white;
     border: 1px solid dodgerblue;
     border-radius: 10%;
     color: dodgerblue;
+
+}
+
+header button.button {
+
     margin: 1em;
     padding: 0.5em;
     width: 5em;
 }
 
-header button:hover {
+.button:hover {
     color: white;
     background-color: dodgerblue;
     cursor: pointer;
@@ -86,7 +129,7 @@ nav div:not(:first-child) {
     padding: 0.5em 1em 0.5em 0;
 }
 
-nav div:hover {
+nav div:not(:first-child):hover {
     cursor: pointer;
     color: dodgerblue;
     border-right: 2px solid dodgerblue;

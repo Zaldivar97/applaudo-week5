@@ -1,8 +1,14 @@
 {% extends 'base.html' %}
+{% block tiny %}
+    {% load static %}
+    <link rel="stylesheet" href="{% static '/blog/css/save.css' %}">
+    <script src="https://cdn.tiny.cloud/1/no-api-key/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script>
+    <script>tinymce.init({selector: 'textarea'});</script>
+{% endblock %}
 {% block content %}
-<form method="post">
+    <form method="post">
     {% csrf_token %}
     {{ form.as_p }}
-    <input type="submit" value="Post">
+    <input type="submit" class="button" value="Post">
 {% endblock %}
 </form>
