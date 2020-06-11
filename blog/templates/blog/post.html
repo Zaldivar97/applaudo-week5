@@ -19,14 +19,14 @@
             {% csrf_token %}
 
             {% load static %}
-                {% if like_exists %}
-                    <button type="button" title="Add reaction">
-                    <img src="{% static 'blog/images/selected_heart.png' %}">
-                {% else %}
-                    <button type="submit" title="Add reaction">
-                    <img src="{% static 'blog/images/heart.svg' %}">
-                {% endif %}
-                <span> {{ object.likes_count }}</span>
+            {% if like_exists %}
+                <button type="button" title="Love it">
+                <img src="{% static 'blog/images/selected_heart.png' %}">
+            {% else %}
+                <button type="submit" title="Add reaction">
+                <img src="{% static 'blog/images/heart.svg' %}">
+            {% endif %}
+            <span> {{ object.likes_count }}</span>
             </button>
         </form>
         <div class="flex-container">
@@ -52,20 +52,28 @@
                                 {% csrf_token %}
 
                                 {% load static %}
-                                    {% if comment.like_by_user_exists %}
-                                        <button type="button" title="Add reaction">
-                                        <img src="{% static 'blog/images/selected_heart.png' %}">
-                                    {% else %}
-                                        <button type="submit" title="Add reaction">
-                                        <img src="{% static 'blog/images/heart.svg' %}">
-                                    {% endif %}
-                                    <span> {{ comment.likes_count }}</span>
+                                {% if comment.like_by_user_exists %}
+                                    <button type="button" title="Love it">
+                                    <img src="{% static 'blog/images/selected_heart.png' %}">
+                                {% else %}
+                                    <button type="submit" title="Love it">
+                                    <img src="{% static 'blog/images/heart.svg' %}">
+                                {% endif %}
+                                <span> {{ comment.likes_count }}</span>
                                 </button>
                             </form>
                         </div>
-                        <form class="right-meta report">
-                            <a>Report</a>
-                        </form>
+                        <div>
+                            <div class="right-meta report likes">
+                                {% if comment.report_by_user_exists %}
+                                    <a title="Reported">
+                                {% else %}
+                                    <a title="Report comment" href="{% url 'comment_report' id=comment.id %}">
+                                {% endif %}
+                                <img src="{% static 'blog/images/report.png' %}">
+                                </a>
+                            </div>
+                        </div>
                     </div>
                 </div>
 

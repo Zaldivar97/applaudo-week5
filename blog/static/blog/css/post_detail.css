@@ -4,7 +4,7 @@
 }
 
 .comment {
-    padding: .5em;
+    padding: .5em 2em;
     margin: 0.3em 0 1em 2em;
     background-color: rgb(250, 250, 250);
     border: 1px solid rgb(240, 240, 240);
@@ -26,8 +26,11 @@
 }
 
 .comment-meta {
-    display: flex;
     margin: 1em 0;
+}
+.comment-meta div{
+    display: inline-block;
+    margin-right: 2em;
 }
 
 .comment-meta .right-meta {
@@ -56,6 +59,8 @@
 
 .comment-content {
     word-wrap: break-word;
+    padding: 1em;
+    background-color: #fff;
 }
 
 .content {
