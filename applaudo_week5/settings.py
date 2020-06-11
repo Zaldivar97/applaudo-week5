@@ -26,7 +26,7 @@ SECRET_KEY = 's&xsawa1)_#+%0tf4)y%-4^2a@u2s)^3i5ru-0je%b1w6=qms5'
 #DEBUG = False
 
 #dev
-DEBUG = False
+DEBUG = True
 
 
 ALLOWED_HOSTS = ['localhost','.herokuapp.com']
@@ -85,7 +85,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'blog',
         'USER': 'applaudo',
-        'PASSWORD': '123',
+        'PASSWORD': 'zh97',
         'HOST': 'localhost',
         'PORT': 5433,
     }

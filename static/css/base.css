@@ -1,38 +1,38 @@
 
-*{
-box-sizing: border-box;    
+* {
+    box-sizing: border-box;
 }
 
-.wrapper{
+.wrapper {
     display: grid;
-    height: 100vh;
-    grid-template-columns: 1fr 8fr;
-    grid-template-rows: 1fr 8fr;
+    height: 100%;
+    grid-template-columns: 1fr minmax(200px, 8fr);;
+    grid-template-rows: 1fr 15fr;
     grid-template-areas: "header header"
                          "nav main";
-                         padding: 0 2em;
-    
-}
-body{
-    position: relative;
-}
-#button-wrapper{
-  text-align: right;
-    flex-grow: 7;
-}
-#title{
-        flex-grow: 3;
+    padding: 0 2em;
 }
 
-header{
+#button-wrapper {
+    text-align: right;
+    flex-grow: 7;
+}
+
+#title {
+    flex-grow: 3;
+}
+
+header {
     grid-area: header;
     position: sticky;
     top: 0;
-    background-color:#fff;
+    background-color: #fff;
     display: flex;
+    z-index: 1;
+
 }
 
-button{
+header button {
     background-color: white;
     border: 1px solid dodgerblue;
     border-radius: 10%;
@@ -41,60 +41,81 @@ button{
     padding: 0.5em;
     width: 5em;
 }
-button:hover{
+
+header button:hover {
     color: white;
     background-color: dodgerblue;
     cursor: pointer;
 }
-header div{
-color: dodgerblue;
-font-size: 2em;
+
+button:hover {
+    cursor: pointer;
+}
+
+header div {
+    color: dodgerblue;
+    font-size: 2em;
 
 }
-main{
+
+main {
     grid-area: main;
     margin-left: 3em;
     padding: 0 2em;
 }
-nav{
+
+nav {
     grid-area: nav;
     margin: 2em 0;
     display: flex;
     flex-direction: column;
-    
+
 }
-nav div{
+
+nav div {
     margin-bottom: 2em;
-    
+
 }
-nav div:not(:first-child){
-    border-right: 2px solid dodgerblue;
-    
+
+nav div:not(:first-child) {
+    border-right: 2px solid #ddd;
+
     width: 100%;
     text-align: right;
     font-size: 1em;
     padding: 0.5em 1em 0.5em 0;
 }
-nav div:hover{
+
+nav div:hover {
+    cursor: pointer;
+    color: dodgerblue;
+    border-right: 2px solid dodgerblue;
+}
+
+.active {
+    border-right: 2px solid dodgerblue !important;
+}
+
+.post-title:hover > a {
     cursor: pointer;
     color: dodgerblue;
 }
-.post-title:hover > a{
-    cursor: pointer;
-    color: dodgerblue;
-}
-.post-meta{
+
+.post-meta {
     width: 30%;
 }
-.meta-1{
+
+.meta-1 {
     width: 50%;
     color: dodgerblue;
     font-weight: bold;
 }
-.meta-1, .meta-2{
+
+.meta-1, .meta-2 {
     display: inline;
 }
-.meta-2{
+
+.meta-2 {
     color: dodgerblue;
     width: 50%;
 }
