@@ -4,6 +4,7 @@ from django.db import models
 from django.urls import reverse
 from django.utils.text import slugify
 from django.conf import settings
+from tinymce.models import HTMLField
 
 
 # Create your models here.
@@ -37,9 +38,10 @@ class Post(models.Model):
         related_name="posts"
     )
     tags = models.ManyToManyField(Tag)
-    title = models.CharField(max_length=200)
-    content = models.TextField()
     likes = models.ManyToManyField(User, related_name="likes", blank=True)
+    reading_list = models.ManyToManyField(User, related_name='reading_list')
+    title = models.CharField(max_length=200)
+    content = HTMLField()
     active = models.BooleanField(default=True)
     approved = models.BooleanField(default=False)
     created_at = models.DateField(auto_now_add=True)
@@ -67,7 +69,6 @@ class Post(models.Model):
 
 
 class Comment(models.Model):
-    user_logged_id = None
     user = models.ForeignKey(
         User, on_delete=models.CASCADE,
         related_name='comments',
@@ -80,12 +81,18 @@ class Comment(models.Model):
     approved = models.BooleanField(default=True)
     created_at = models.DateField(auto_now_add=True)
 
+    user_logged_id = None
+
     def likes_count(self):
         return self.likes.all().count()
 
     def like_by_user_exists(self):
         if self.user_logged_id is not None:
             return self.likes.filter(id=self.user_logged_id).exists()
+
+    def report_by_user_exists(self):
+        if self.user_logged_id is not None:
+            return self.flags.filter(id=self.user_logged_id).exists()
 
     def __str__(self):
         return f'By {self.user}'

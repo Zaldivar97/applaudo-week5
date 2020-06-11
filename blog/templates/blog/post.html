@@ -3,6 +3,7 @@
     {% load static %}
     <link rel="stylesheet" href="{% static 'blog/css/post_detail.css' %}">
     <link rel="stylesheet" href="{% static 'blog/css/app_base.css' %}">
+
     <div id="post-wrapper">
         <p>{{ object.title }}</p>
         <div class="post-meta">
@@ -11,20 +12,21 @@
             <div class="meta-2">{{ object.created_at }}</div>
         </div>
         <div class="content">
-            {{ object.content }}
+            {{ object.content|safe }}
         </div>
 
         <form class="likes" method="post" action="{% url 'post_like' slug=object.slug %}">
             {% csrf_token %}
 
             {% load static %}
-            <button type="submit" title="Add reaction">
-                {% if like_exists %}
-                    <img src="{% static 'blog/images/selected_heart.png' %}">
-                {% else %}
-                    <img src="{% static 'blog/images/heart.svg' %}">
-                {% endif %}
-                <span> {{ object.likes_count }}</span>
+            {% if like_exists %}
+                <button type="button" title="Love it">
+                <img src="{% static 'blog/images/selected_heart.png' %}">
+            {% else %}
+                <button type="submit" title="Add reaction">
+                <img src="{% static 'blog/images/heart.svg' %}">
+            {% endif %}
+            <span> {{ object.likes_count }}</span>
             </button>
         </form>
         <div class="flex-container">
@@ -50,19 +52,28 @@
                                 {% csrf_token %}
 
                                 {% load static %}
-                                <button type="submit" title="Add reaction">
-                                    {% if comment.like_by_user_exists %}
-                                        <img src="{% static 'blog/images/selected_heart.png' %}">
-                                    {% else %}
-                                        <img src="{% static 'blog/images/heart.svg' %}">
-                                    {% endif %}
-                                    <span> {{ comment.likes_count }}</span>
+                                {% if comment.like_by_user_exists %}
+                                    <button type="button" title="Love it">
+                                    <img src="{% static 'blog/images/selected_heart.png' %}">
+                                {% else %}
+                                    <button type="submit" title="Love it">
+                                    <img src="{% static 'blog/images/heart.svg' %}">
+                                {% endif %}
+                                <span> {{ comment.likes_count }}</span>
                                 </button>
                             </form>
                         </div>
-                        <form class="right-meta report">
-                            <a>Report</a>
-                        </form>
+                        <div>
+                            <div class="right-meta report likes">
+                                {% if comment.report_by_user_exists %}
+                                    <a title="Reported">
+                                {% else %}
+                                    <a title="Report comment" href="{% url 'comment_report' id=comment.id %}">
+                                {% endif %}
+                                <img src="{% static 'blog/images/report.png' %}">
+                                </a>
+                            </div>
+                        </div>
                     </div>
                 </div>
 

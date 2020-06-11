@@ -12,9 +12,9 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 
 import os
 import django_heroku
+
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
@@ -23,14 +23,13 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 's&xsawa1)_#+%0tf4)y%-4^2a@u2s)^3i5ru-0je%b1w6=qms5'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-#DEBUG = False
+# DEBUG = False
 
 #dev
 DEBUG = False
 
 
-ALLOWED_HOSTS = ['localhost','.herokuapp.com']
-
+ALLOWED_HOSTS = ['localhost', '.herokuapp.com']
 
 # Application definition
 
@@ -43,6 +42,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'blog',
     'users',
+    'tinymce',
+    'profiles',
 ]
 
 MIDDLEWARE = [
@@ -75,7 +76,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'applaudo_week5.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
 
@@ -83,14 +83,13 @@ WSGI_APPLICATION = 'applaudo_week5.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'blog',
-        'USER': 'applaudo',
-        'PASSWORD': 'zh97',
-        'HOST': 'localhost',
+        'NAME': os.environ.get('BLOG_DB'),
+        'USER': os.environ.get('BLOG_USER'),
+        'PASSWORD': os.environ.get('BLOG_PASSW'),
+        'HOST': os.environ.get('DB_HOST'),
         'PORT': 5433,
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/3.0/ref/settings/#auth-password-validators
@@ -110,7 +109,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/3.0/topics/i18n/
 
@@ -124,10 +122,10 @@ USE_L10N = True
 
 USE_TZ = True
 
-
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static'),]
 django_heroku.settings(locals())
+
