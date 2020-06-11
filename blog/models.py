@@ -37,9 +37,10 @@ class Post(models.Model):
         related_name="posts"
     )
     tags = models.ManyToManyField(Tag)
+    likes = models.ManyToManyField(User, related_name="likes", blank=True)
+    reading_list = models.ManyToManyField(User, related_name='reading_list')
     title = models.CharField(max_length=200)
     content = HTMLField()
-    likes = models.ManyToManyField(User, related_name="likes", blank=True)
     active = models.BooleanField(default=True)
     approved = models.BooleanField(default=False)
     created_at = models.DateField(auto_now_add=True)

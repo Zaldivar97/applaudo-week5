@@ -37,10 +37,6 @@
     cursor: pointer;
 }
 a{
-    text-decoration: none;
     background-color: #ccc;
 
-}
-a:visited{
-    color: inherit;
 }

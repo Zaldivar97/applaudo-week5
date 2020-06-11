@@ -1,0 +1,48 @@
+#counts {
+    display: flex;
+
+}
+
+#counts div {
+    flex-grow: 1;
+}
+
+#profile-header {
+    display: flex;
+}
+
+#profile-header :not(#update-meta) {
+    flex-grow: 9;
+}
+
+#update-meta {
+    flex-grow: 1;
+    text-align: end;
+    margin-top: 2em;
+}
+
+#update-meta .button {
+    padding: 0.5em;
+
+}
+
+#profile-wrapper p a {
+    padding: 1em;
+    display: block;
+}
+
+#profile-wrapper p {
+    padding: 2px;
+}
+
+.odd {
+    background-color: #d7d2fb;
+}
+
+.even {
+    background-color: #cccccc;
+}
+
+#profile-wrapper p a:hover {
+    border: 1px solid #000;
+}

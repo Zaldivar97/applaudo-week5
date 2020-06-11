@@ -47,7 +47,7 @@
                         <button>{{ user.username }}</button>
                         <div class="dropdown-content">
                             <a href="{% url 'post_new' %}">New post</a>
-                            <a>Profile</a>
+                            <a href="{% url 'profile-index' id=user.profile.id %}">Profile</a>
                         </div>
                     </div>
                 <button onclick="logout()" class="button">Logout</button>
