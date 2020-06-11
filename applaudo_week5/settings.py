@@ -82,10 +82,10 @@ WSGI_APPLICATION = 'applaudo_week5.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'blog',
-        'USER': 'applaudo',
-        'PASSWORD': 'zh97',
-        'HOST': 'localhost',
+        'NAME': os.environ.get('BLOG_DB'),
+        'USER': os.environ.get('BLOG_USER'),
+        'PASSWORD': os.environ.get('BLOG_PASSW'),
+        'HOST': os.environ.get('DB_HOST'),
         'PORT': 5433,
     }
 }
