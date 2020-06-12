@@ -1,9 +1,8 @@
-from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
 from django.db.models.signals import pre_save
 from django.db import models
 from django.urls import reverse
 from django.utils.text import slugify
-from django.conf import settings
 from tinymce.models import HTMLField
 
 
@@ -19,7 +18,6 @@ class Tag(models.Model):
 
 class PostQuerySet(models.QuerySet):
     def most_popular(self):
-        # print(settings.LOGIN_URL)
         return self.filter(likes__gt=25)
 
 
@@ -34,12 +32,12 @@ class PostModelManager(models.Manager):
 
 class Post(models.Model):
     user = models.ForeignKey(
-        User, on_delete=models.CASCADE,
+        get_user_model(), on_delete=models.CASCADE,
         related_name="posts"
     )
     tags = models.ManyToManyField(Tag)
-    likes = models.ManyToManyField(User, related_name="likes", blank=True)
-    reading_list = models.ManyToManyField(User, related_name='reading_list')
+    likes = models.ManyToManyField(get_user_model(), related_name="likes", blank=True)
+    reading_list = models.ManyToManyField(get_user_model(), related_name='reading_list')
     title = models.CharField(max_length=200)
     content = HTMLField()
     active = models.BooleanField(default=True)
@@ -58,6 +56,9 @@ class Post(models.Model):
     def like_by_user_exists(self, user):
         return self.likes.filter(id=user.id).exists()
 
+    def is_added_to_reading_list(self, user):
+        return self.reading_list.filter(id=user.id).exists()
+
     def __str__(self):
         return self.title
 
@@ -70,14 +71,14 @@ class Post(models.Model):
 
 class Comment(models.Model):
     user = models.ForeignKey(
-        User, on_delete=models.CASCADE,
+        get_user_model(), on_delete=models.CASCADE,
         related_name='comments',
         verbose_name='Comment creator'
     )
     post = models.ForeignKey(Post, on_delete=models.CASCADE)
-    likes = models.ManyToManyField(User, related_name='comment_likes', blank=True)
+    likes = models.ManyToManyField(get_user_model(), related_name='comment_likes', blank=True)
     content = models.TextField()
-    flags = models.ManyToManyField(User, through='CommentReport')
+    flags = models.ManyToManyField(get_user_model(), through='CommentReport')
     approved = models.BooleanField(default=True)
     created_at = models.DateField(auto_now_add=True)
 
@@ -102,7 +103,7 @@ class Comment(models.Model):
 
 
 class CommentReport(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE)
     comment = models.ForeignKey(Comment, on_delete=models.CASCADE)
     reason = models.CharField(max_length=64)
     created_at = models.DateField(auto_now_add=True)

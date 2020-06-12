@@ -1,10 +1,11 @@
 from django.db import models
-from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
+from django.urls import reverse
 
 
 # Create your models here.
 class Profile(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    user = models.OneToOneField(get_user_model(), on_delete=models.CASCADE)
     profile_description = models.CharField(max_length=300, default='My profile description')
 
     def comments_count(self):
@@ -16,3 +17,5 @@ class Profile(models.Model):
     def posts(self):
         return self.user.posts
 
+    def get_absolute_url(self):
+        return reverse('profile-index', kwargs={'id':self.id})

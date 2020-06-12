@@ -84,15 +84,20 @@
     margin-top: 2em;
 }
 
-.likes button {
+.likes button, #utils button{
     color: initial;
     border: none;
     background: none;
     position: relative;
 
 }
+#utils{
 
-.likes img {
+}
+#utils form{
+    display: inline-block;
+}
+.likes img, #utils img {
     height: 20px;
     width: 20px;
 }

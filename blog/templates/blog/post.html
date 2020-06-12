@@ -14,21 +14,34 @@
         <div class="content">
             {{ object.content|safe }}
         </div>
+        <div id="utils">
+            <form class="likes" method="post" action="{% url 'post_like' slug=object.slug %}">
+                {% csrf_token %}
 
-        <form class="likes" method="post" action="{% url 'post_like' slug=object.slug %}">
-            {% csrf_token %}
-
-            {% load static %}
-            {% if like_exists %}
-                <button type="button" title="Love it">
-                <img src="{% static 'blog/images/selected_heart.png' %}">
-            {% else %}
-                <button type="submit" title="Add reaction">
-                <img src="{% static 'blog/images/heart.svg' %}">
-            {% endif %}
-            <span> {{ object.likes_count }}</span>
-            </button>
-        </form>
+                {% load static %}
+                {% if like_exists %}
+                    <button type="button" title="Love it">
+                    <img src="{% static 'blog/images/selected_heart.png' %}">
+                {% else %}
+                    <button type="submit" title="Add reaction">
+                    <img src="{% static 'blog/images/heart.svg' %}">
+                {% endif %}
+                <span> {{ object.likes_count }}</span>
+                </button>
+            </form>
+            <form action="{% url 'post_read_list' slug=object.slug %}" method="post">
+                {% csrf_token %}
+                {% if post_exist_in_list %}
+                    <button title="On your list" disabled>
+                        <img src="{% static 'blog/images/check.svg' %}">
+                    </button>
+                {% else %}
+                    <button title="Read later" type="submit">
+                        <img src="{% static 'blog/images/watch_later.png' %}">
+                    </button>
+                {% endif %}
+            </form>
+        </div>
         <div class="flex-container">
             {% for tag in post.tags.all %}
                 <div>{{ tag.name }}</div>
@@ -67,10 +80,12 @@
                             <div class="right-meta report likes">
                                 {% if comment.report_by_user_exists %}
                                     <a title="Reported">
+                                    <img src="{% static 'blog/images/reported.png' %}">
                                 {% else %}
                                     <a title="Report comment" href="{% url 'comment_report' id=comment.id %}">
+                                    <img src="{% static 'blog/images/report.png' %}">
                                 {% endif %}
-                                <img src="{% static 'blog/images/report.png' %}">
+
                                 </a>
                             </div>
                         </div>

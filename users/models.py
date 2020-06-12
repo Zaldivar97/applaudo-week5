@@ -1,4 +1,4 @@
-from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
 from django.db.models.signals import post_save
 
 from profiles.models import Profile
@@ -14,4 +14,4 @@ def post_save_user(sender, instance, created, *args, **kwargs):
             raise
 
 
-post_save.connect(post_save_user, sender=User)
+post_save.connect(post_save_user, sender=get_user_model())

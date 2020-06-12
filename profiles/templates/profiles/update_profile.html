@@ -1,7 +1,10 @@
 {% extends 'base.html' %}
 {% block content %}
     <form action="" method="post">
-        {{ form.as_p }}
+        {% csrf_token %}
+        {{ user_form.username }}
+        {{ user_form.email }}
+        {{ form.profile_description }}
         <input type="submit" value="Update">
     </form>
 {% endblock %}
