@@ -33,6 +33,5 @@ class UpdateProfile(LoginRequiredMixin, UpdateView):
         username = self.request.POST.get('username')
         email = self.request.POST.get('email')
         form = UserForm(dict(username=username, email=email), instance=user)
-        if form.is_valid():
-            form.save()
-            return super().post(*args, **kwargs)
+        form.save()
+        return super().post(*args, **kwargs)

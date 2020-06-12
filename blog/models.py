@@ -24,13 +24,14 @@ class PostQuerySet(models.QuerySet):
     def all_resumed(self):
         return self.all()
 
+    def filtered(self):
+        return self.filter(Q(active=True) & Q(approved=True))
+
 
 class PostModelManager(models.Manager):
-    def get_queryset(self):
-        return PostQuerySet(self.model, using=self._db)
 
-    def all(self, *args, **kwargs):
-        qs = super().all(*args, **kwargs).filter(Q(active=True) & Q(approved=True))
+    def get_queryset(self):
+        qs = PostQuerySet(self.model, using=self._db)
         return qs
 
 
@@ -67,10 +68,22 @@ class Post(models.Model):
         return self.title
 
     def get_absolute_url(self):
-        return reverse("post_detail", kwargs={"slug": self.slug})
+        return reverse('post_detail', kwargs={'slug': self.slug})
 
     class Meta:
-        ordering = ["-id"]
+        ordering = ['-created_at', '-id']
+
+
+class CommentQuerySet(models.QuerySet):
+    def filtered(self):
+        return self.filter(approved=True)
+
+
+class CommentManager(models.Manager):
+
+    def get_queryset(self):
+        qs = CommentQuerySet(self.model, using=self._db)
+        return qs
 
 
 class Comment(models.Model):
@@ -86,6 +99,8 @@ class Comment(models.Model):
     approved = models.BooleanField(default=True)
     created_at = models.DateField(auto_now_add=True)
 
+    objects = CommentManager()
+
     user_logged_id = None
 
     def likes_count(self):
@@ -100,10 +115,10 @@ class Comment(models.Model):
             return self.flags.filter(id=self.user_logged_id).exists()
 
     def __str__(self):
-        return f'By {self.user}'
+        return self.user
 
     class Meta:
-        ordering = ["id"]
+        ordering = ['created_at', 'id']
 
 
 class CommentReport(models.Model):

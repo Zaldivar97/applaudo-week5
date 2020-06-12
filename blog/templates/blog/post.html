@@ -20,7 +20,7 @@
 
         <p>{{ object.title }}</p>
         <div class="post-meta">
-            <div class="meta-1">By {{ object.user.username }}</div>
+            <div class="meta-1">{{ object.user.username }}</div>
             -
             <div class="meta-2">{{ object.created_at }}</div>
         </div>
@@ -61,12 +61,12 @@
         </div>
         <div class="flex-container">
             {% for tag in post.tags.all %}
-                <div>{{ tag.name }}</div>
+                <a>{{tag.name }}</a>
             {% endfor %}
         </div>
         <div id="comment-wrapper">
             <p>Comments ({{ object.comments.count }})</p>
-            {% for comment in object.comments %}
+            {% for comment in object.comments.filtered %}
                 <div class="comment">
                     <div class="comment-meta">
                         <div class="user">{{ comment.user.username }}</div>

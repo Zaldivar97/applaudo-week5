@@ -53,11 +53,23 @@ class PostListView(ListView):
     template_name = 'blog/posts.html'
 
     def get_queryset(self):
+        qs = super().get_queryset()
         query = self.request.GET.get('q', None)
+        tag_query = self.request.GET.get('tag', None)
         if query is not None:
-            queryset = Post.objects.filter(title__icontains=query)
+            queryset = qs.filtered().filter(title__icontains=query)
             return queryset
-        return super().get_queryset()
+        if tag_query is not None:
+            queryset = self.query_tag(qs, tag_query)
+            return queryset
+        return super().get_queryset().filtered()
+
+    def query_tag(self, qs, name):
+        return qs.filtered().filter(tags__name__icontains=name)
+
+
+def is_owner(user, post):
+    return user.id is post.user.id
 
 
 class PostView(DetailView):
@@ -68,15 +80,12 @@ class PostView(DetailView):
         context = super().get_context_data(**kwargs)
         user = self.request.user
         post = self.get_object()
-        owner = self.is_owner(user, post)
+        owner = is_owner(user, post)
         user_like_exists, post_exist_in_list = self.check_user(user)
         context['like_exists'] = user_like_exists
         context['post_exist_in_list'] = post_exist_in_list
         context['owner'] = owner
         return context
-
-    def is_owner(self, user, post):
-        return user.id is post.user.id
 
     def verify_user_like(self, user):
         user_like_exists = self.object.like_by_user_exists(user)
@@ -93,7 +102,7 @@ class PostView(DetailView):
                     self.is_added_to_user_list(user)
                     )
         Comment.user_logged_id = None
-        return False
+        return False, False
 
 
 class PostComment(LoginRequiredMixin, BaseDetailView):
@@ -144,6 +153,13 @@ class CommentLike(LoginRequiredMixin, BaseDetailView):
         return HttpResponseRedirect(comment.post.get_absolute_url())
 
 
+def verify_flags(comment: Comment):
+    count = comment.flags.count()
+    if count == 2:
+        comment.approved = False
+        comment.save()
+
+
 class Report(LoginRequiredMixin, TemplateResponseMixin, BaseDetailView):
     model = Comment
     template_name = 'blog/confirm-report.html'
@@ -152,9 +168,8 @@ class Report(LoginRequiredMixin, TemplateResponseMixin, BaseDetailView):
     def post(self, *args, **kwargs):
         user = self.request.user
         comment = self.get_object()
+        verify_flags(comment)
         reason = self.request.POST.get('reason')
         comment_report = CommentReport(user=user, comment=comment, reason=reason)
         comment_report.save()
         return HttpResponseRedirect(comment.post.get_absolute_url())
-
-# /posts/<slug>/like
