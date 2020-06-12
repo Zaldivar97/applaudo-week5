@@ -6,7 +6,7 @@ form{
 }
 input[type="text"]:not(#search){
     padding: 1em;
-    width: 70%;
+    width: 100%;
 }
 #id_tags{
     list-style-type: none;

@@ -1,10 +1,11 @@
-from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
+from django.db.models import Q
 from django.db.models.signals import pre_save
 from django.db import models
 from django.urls import reverse
 from django.utils.text import slugify
-from django.conf import settings
 from tinymce.models import HTMLField
+
 
 # Create your models here.
 
@@ -18,27 +19,30 @@ class Tag(models.Model):
 
 class PostQuerySet(models.QuerySet):
     def most_popular(self):
-        # print(settings.LOGIN_URL)
         return self.filter(likes__gt=25)
+
+    def all_resumed(self):
+        return self.all()
+
+    def filtered(self):
+        return self.filter(Q(active=True) & Q(approved=True))
 
 
 class PostModelManager(models.Manager):
-    def get_queryset(self):
-        return PostQuerySet(self.model, using=self._db)
 
-    def all(self, *args, **kwargs):
-        qs = super().all(*args, **kwargs).filter(active=True)
+    def get_queryset(self):
+        qs = PostQuerySet(self.model, using=self._db)
         return qs
 
 
 class Post(models.Model):
     user = models.ForeignKey(
-        User, on_delete=models.CASCADE,
+        get_user_model(), on_delete=models.CASCADE,
         related_name="posts"
     )
     tags = models.ManyToManyField(Tag)
-    likes = models.ManyToManyField(User, related_name="likes", blank=True)
-    reading_list = models.ManyToManyField(User, related_name='reading_list')
+    likes = models.ManyToManyField(get_user_model(), related_name="likes", blank=True)
+    reading_list = models.ManyToManyField(get_user_model(), related_name='reading_list')
     title = models.CharField(max_length=200)
     content = HTMLField()
     active = models.BooleanField(default=True)
@@ -57,28 +61,45 @@ class Post(models.Model):
     def like_by_user_exists(self, user):
         return self.likes.filter(id=user.id).exists()
 
+    def is_added_to_reading_list(self, user):
+        return self.reading_list.filter(id=user.id).exists()
+
     def __str__(self):
         return self.title
 
     def get_absolute_url(self):
-        return reverse("post_detail", kwargs={"slug": self.slug})
+        return reverse('post_detail', kwargs={'slug': self.slug})
 
     class Meta:
-        ordering = ["id"]
+        ordering = ['-created_at', '-id']
+
+
+class CommentQuerySet(models.QuerySet):
+    def filtered(self):
+        return self.filter(approved=True)
+
+
+class CommentManager(models.Manager):
+
+    def get_queryset(self):
+        qs = CommentQuerySet(self.model, using=self._db)
+        return qs
 
 
 class Comment(models.Model):
     user = models.ForeignKey(
-        User, on_delete=models.CASCADE,
+        get_user_model(), on_delete=models.CASCADE,
         related_name='comments',
         verbose_name='Comment creator'
     )
     post = models.ForeignKey(Post, on_delete=models.CASCADE)
-    likes = models.ManyToManyField(User, related_name='comment_likes', blank=True)
+    likes = models.ManyToManyField(get_user_model(), related_name='comment_likes', blank=True)
     content = models.TextField()
-    flags = models.ManyToManyField(User, through='CommentReport')
+    flags = models.ManyToManyField(get_user_model(), through='CommentReport')
     approved = models.BooleanField(default=True)
     created_at = models.DateField(auto_now_add=True)
+
+    objects = CommentManager()
 
     user_logged_id = None
 
@@ -94,22 +115,23 @@ class Comment(models.Model):
             return self.flags.filter(id=self.user_logged_id).exists()
 
     def __str__(self):
-        return f'By {self.user}'
+        return self.user
 
     class Meta:
-        ordering = ["id"]
+        ordering = ['created_at', 'id']
 
 
 class CommentReport(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE)
     comment = models.ForeignKey(Comment, on_delete=models.CASCADE)
     reason = models.CharField(max_length=64)
     created_at = models.DateField(auto_now_add=True)
 
 
 def pre_save_post(sender, instance, *args, **kwargs):
-    slug = slugify(instance.title)
-    instance.slug = slug
+    if not instance.slug:
+        slug = slugify(instance.title)
+        instance.slug = slug
 
 
 pre_save.connect(pre_save_post, sender=Post)

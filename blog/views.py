@@ -1,10 +1,8 @@
-from dataclasses import fields
-
-from django import template
-from django.views.generic import DetailView, ListView, CreateView, UpdateView
+from django.views.generic import DetailView, ListView, CreateView, UpdateView, DeleteView
 from django.views.generic.detail import BaseDetailView, TemplateResponseMixin
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponseRedirect
+from django.urls import reverse
 
 from .models import Post, Comment, CommentReport
 from .forms import PostCreateForm
@@ -19,7 +17,9 @@ class PostCreate(LoginRequiredMixin, CreateView):
 
     def form_valid(self, form):
         post = form.instance
-        post.user = self.request.user
+        user = self.request.user
+        post.user = user
+        self.success_url = reverse('profile-index', kwargs={'id': user.profile.id})
         return super().form_valid(form)
 
 
@@ -27,6 +27,17 @@ class PostUpdate(LoginRequiredMixin, UpdateView):
     model = Post
     template_name = 'blog/new_post.html'
     form_class = PostCreateForm
+
+    def form_valid(self, form):
+        user = self.request.user
+        form.instance.approved = False
+        self.success_url = reverse('profile-index', kwargs={'id': user.profile.id})
+        return super().form_valid(form)
+
+
+class PostDelete(LoginRequiredMixin, DeleteView):
+    model = Post
+    template_name = 'blog/delete.html'
 
 
 class PostListPopular(ListView):
@@ -42,11 +53,23 @@ class PostListView(ListView):
     template_name = 'blog/posts.html'
 
     def get_queryset(self):
+        qs = super().get_queryset()
         query = self.request.GET.get('q', None)
+        tag_query = self.request.GET.get('tag', None)
         if query is not None:
-            queryset = Post.objects.filter(title__icontains=query)
+            queryset = qs.filtered().filter(title__icontains=query)
             return queryset
-        return super().get_queryset()
+        if tag_query is not None:
+            queryset = self.query_tag(qs, tag_query)
+            return queryset
+        return super().get_queryset().filtered()
+
+    def query_tag(self, qs, name):
+        return qs.filtered().filter(tags__name__icontains=name)
+
+
+def is_owner(user, post):
+    return user.id is post.user.id
 
 
 class PostView(DetailView):
@@ -56,20 +79,30 @@ class PostView(DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         user = self.request.user
-        user_like_exists = self.check_user(user)
+        post = self.get_object()
+        owner = is_owner(user, post)
+        user_like_exists, post_exist_in_list = self.check_user(user)
         context['like_exists'] = user_like_exists
+        context['post_exist_in_list'] = post_exist_in_list
+        context['owner'] = owner
         return context
 
     def verify_user_like(self, user):
         user_like_exists = self.object.like_by_user_exists(user)
         return user_like_exists
 
+    def is_added_to_user_list(self, user):
+        post_is_added = self.object.is_added_to_reading_list(user)
+        return post_is_added
+
     def check_user(self, user):
         if user.is_authenticated:
             Comment.user_logged_id = user.id
-            return self.verify_user_like(user)
+            return (self.verify_user_like(user),
+                    self.is_added_to_user_list(user)
+                    )
         Comment.user_logged_id = None
-        return False
+        return False, False
 
 
 class PostComment(LoginRequiredMixin, BaseDetailView):
@@ -99,6 +132,16 @@ class PostLike(LoginRequiredMixin, BaseDetailView):
         return HttpResponseRedirect(post.get_absolute_url())
 
 
+class PostReadLater(LoginRequiredMixin, BaseDetailView):
+    model = Post
+
+    def post(self, *args, **kwargs):
+        user = self.request.user
+        post = self.get_object()
+        post.reading_list.add(user)
+        return HttpResponseRedirect(post.get_absolute_url())
+
+
 class CommentLike(LoginRequiredMixin, BaseDetailView):
     model = Comment
     pk_url_kwarg = 'id'
@@ -110,6 +153,13 @@ class CommentLike(LoginRequiredMixin, BaseDetailView):
         return HttpResponseRedirect(comment.post.get_absolute_url())
 
 
+def verify_flags(comment: Comment):
+    count = comment.flags.count()
+    if count == 2:
+        comment.approved = False
+        comment.save()
+
+
 class Report(LoginRequiredMixin, TemplateResponseMixin, BaseDetailView):
     model = Comment
     template_name = 'blog/confirm-report.html'
@@ -118,9 +168,8 @@ class Report(LoginRequiredMixin, TemplateResponseMixin, BaseDetailView):
     def post(self, *args, **kwargs):
         user = self.request.user
         comment = self.get_object()
+        verify_flags(comment)
         reason = self.request.POST.get('reason')
         comment_report = CommentReport(user=user, comment=comment, reason=reason)
         comment_report.save()
         return HttpResponseRedirect(comment.post.get_absolute_url())
-
-# /posts/<slug>/like

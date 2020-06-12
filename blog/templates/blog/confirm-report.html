@@ -5,10 +5,12 @@
     <div id="confirm">
 
         <form method="post">
-            <p>Report the comment</p>
             {% csrf_token %}
-            <textarea name="reason" placeholder="Add the reporting reason" id="reason" cols="30" rows="5"
-                      required></textarea>
+            {% block confirm_content %}
+                <p>Report the comment</p>
+                <textarea name="reason" placeholder="Add the reporting reason" id="reason" cols="30" rows="5"
+                          required></textarea>
+            {% endblock %}
             <a href="{{ request.META.HTTP_REFERER }}">Cancel</a>
             <input type="submit" value="Confirm">
         </form>

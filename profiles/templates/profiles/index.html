@@ -2,6 +2,7 @@
 {% block content %}
     {% load static %}
     <link rel="stylesheet" href="{% static '/profiles/css/index.css' %}">
+    <script type="module" src="{% static 'profiles/js/controls.js' %}"></script>
     <div id="profile-wrapper">
         <div id="profile-header">
             <div>
@@ -23,11 +24,26 @@
             <div>{{ object.comments_count }} comments</div>
             <div>{{ object.likes_count }} likes</div>
         </div>
-        <h5>My posts</h5>
-        {% for post in object.posts.all %}
-            <p><a class="{% cycle 'even' 'odd' %}" href="{% url 'post_detail' slug=post.slug %}">{{ post.title }}</a>
-            </p>
-        {% endfor %}
+        <div id="posts-tab" class="controls selected">My posts</div>
+        <div id="list-tab" class="controls">Reading List</div>
+        <div id="my-posts">
+            {% if object.posts.all %}
+                {% for post in object.posts.all %}
+                    <p><a class="{% cycle 'even' 'odd' %}"
+                          href="{% url 'post_detail' slug=post.slug %}">{{ post.title }}</a>
+                    </p>
+                {% endfor %}
+            {% else %}
+                <h3>Posts may be on the approval process</h3>
+            {% endif %}
 
+        </div>
+        <div id="list" class="hide">
+            {% for post in object.user.reading_list.all %}
+                <p><a class="{% cycle 'even' 'odd' %}"
+                      href="{% url 'post_detail' slug=post.slug %}">{{ post.title }}</a>
+                </p>
+            {% endfor %}
+        </div>
     </div>
 {% endblock %}

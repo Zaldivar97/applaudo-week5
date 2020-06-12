@@ -34,6 +34,19 @@
 #profile-wrapper p {
     padding: 2px;
 }
+.hide{
+    display: none;
+}
+.controls{
+    display: inline-block;
+    padding: 1em;
+}
+.selected{
+    border-bottom: 1px solid dodgerblue;
+}
+.controls:hover{
+    cursor: pointer;
+}
 
 .odd {
     background-color: #d7d2fb;
