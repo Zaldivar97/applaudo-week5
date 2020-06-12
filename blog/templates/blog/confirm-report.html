@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% block content %}
+    {% load static %}
+    <link rel="stylesheet" href="{% static '/blog/css/confirm.css' %}">
+    <div id="confirm">
+
+        <form method="post">
+            <p>Report the comment</p>
+            {% csrf_token %}
+            <textarea name="reason" placeholder="Add the reporting reason" id="reason" cols="30" rows="5"
+                      required></textarea>
+            <a href="{{ request.META.HTTP_REFERER }}">Cancel</a>
+            <input type="submit" value="Confirm">
+        </form>
+    </div>
+{% endblock %}

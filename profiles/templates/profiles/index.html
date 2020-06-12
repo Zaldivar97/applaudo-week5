@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% block content %}
+    {% load static %}
+    <link rel="stylesheet" href="{% static '/profiles/css/index.css' %}">
+    <div id="profile-wrapper">
+        <div id="profile-header">
+            <div>
+                <p>{{ object.user.username }}</p>
+                {% if object.user.email %}
+                    <p>{{ object.user.email }}</p>
+                {% else %}
+                    <p style="color: red">No email</p>
+
+                {% endif %}
+                <p>{{ object.profile_description }}</p>
+            </div>
+            <div id="update-meta">
+                <a class="button" href="{% url 'profile-update' id=object.id %}">Update profile</a>
+            </div>
+        </div>
+        <div id="counts">
+            <div>{{ object.posts.count }} posts</div>
+            <div>{{ object.comments_count }} comments</div>
+            <div>{{ object.likes_count }} likes</div>
+        </div>
+        <h5>My posts</h5>
+        {% for post in object.posts.all %}
+            <p><a class="{% cycle 'even' 'odd' %}" href="{% url 'post_detail' slug=post.slug %}">{{ post.title }}</a>
+            </p>
+        {% endfor %}
+
+    </div>
+{% endblock %}

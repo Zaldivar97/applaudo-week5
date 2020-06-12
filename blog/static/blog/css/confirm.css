@@ -1,0 +1,42 @@
+#confirm form :not(#reason){
+    margin-right: 1em;
+    margin-top: 1em;
+    padding: .5em;
+}
+#confirm textarea{
+    resize: vertical;
+    display: block;
+    width: 100%;
+}
+#confirm p{
+    padding: 0!important;
+}
+#confirm form{
+    display: inline-block;
+    padding: 2em;
+    width: 70%;
+    margin: 0 auto;
+}
+
+
+#confirm {
+    display: flex;
+    align-items: center;
+    height: 100%;
+    justify-content: center;
+        background-color: #f7fbed;
+
+}
+
+#confirm input{
+    background-color: #ff5358;
+    color: #fff;
+    border: none;
+}
+#confirm input:hover{
+    cursor: pointer;
+}
+a{
+    background-color: #ccc;
+
+}

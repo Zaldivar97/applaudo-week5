@@ -7,7 +7,7 @@
     display: grid;
     height: 100%;
     grid-template-columns: 1fr minmax(200px, 8fr);;
-    grid-template-rows: 1fr 15fr;
+    grid-template-rows: fit-content(1fr) 4fr;
     grid-template-areas: "header header"
                          "nav main";
     padding: 0 2em;
@@ -16,6 +16,49 @@
 #button-wrapper {
     text-align: right;
     flex-grow: 7;
+}
+
+.dropdown {
+    position: relative;
+    display: inline-flex;
+}
+.dropdown button{
+    background-color: inherit;
+    font-size: 20px;
+    color: dodgerblue;
+    border: none;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    top: 0.2em;
+    background-color: #f1f1f1;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+    z-index: 1;
+}
+
+.dropdown-content a{
+    color: black;
+
+    display: block;
+    font-size: 15px;
+    text-align: left;
+    padding: 1em;
+}
+a{
+    text-decoration: none;
+}
+a:visited{
+    color: #000;
+}
+.dropdown-content a:hover {
+    background-color: dodgerblue;
+}
+
+.dropdown:hover .dropdown-content {
+    display: block;
 }
 
 #title {
@@ -32,17 +75,22 @@ header {
 
 }
 
-header button {
+.button {
     background-color: white;
     border: 1px solid dodgerblue;
-    border-radius: 10%;
+    border-radius: 5%;
     color: dodgerblue;
+
+}
+
+header button.button {
+
     margin: 1em;
     padding: 0.5em;
     width: 5em;
 }
 
-header button:hover {
+.button:hover {
     color: white;
     background-color: dodgerblue;
     cursor: pointer;
@@ -86,7 +134,7 @@ nav div:not(:first-child) {
     padding: 0.5em 1em 0.5em 0;
 }
 
-nav div:hover {
+nav div:not(:first-child):hover {
     cursor: pointer;
     color: dodgerblue;
     border-right: 2px solid dodgerblue;
