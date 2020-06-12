@@ -1,9 +1,8 @@
-from django.contrib.auth import get_user_model
 from django.views.generic import DetailView, UpdateView
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.contrib.auth.forms import UserChangeForm, forms
 
 from .models import Profile
+from .forms import UserForm
 
 
 # Create your views here.
@@ -11,25 +10,6 @@ class ProfileView(LoginRequiredMixin, DetailView):
     model = Profile
     template_name = 'profiles/index.html'
     pk_url_kwarg = 'id'
-
-
-class UserForm(UserChangeForm):
-    password = None
-
-    class Meta:
-        model = get_user_model()
-        fields = ['username', 'email']
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        for field in self.fields:
-            self.fields[field].help_text = None
-
-
-class ProfileForm(forms.Form):
-    username = forms.CharField(label='', required=True)
-    email = forms.EmailField(label='', required=False)
-    profile_description = forms.CharField(label='', required=True)
 
 
 class UpdateProfile(LoginRequiredMixin, UpdateView):

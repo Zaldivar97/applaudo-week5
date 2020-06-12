@@ -2,7 +2,17 @@
     font-size: 2em;
     margin: 0;
 }
-
+#update-header{
+    text-align: right;
+}
+#update-header img{
+    width: 30px;
+    height: 30px;
+}
+#update-header .dropdown-content{
+    top: 2em;
+    right: .5em;
+}
 .comment {
     padding: .5em 2em;
     margin: 0.3em 0 1em 2em;
@@ -84,7 +94,7 @@
     margin-top: 2em;
 }
 
-.likes button, #utils button{
+.likes button, #utils button, #update-header button{
     color: initial;
     border: none;
     background: none;

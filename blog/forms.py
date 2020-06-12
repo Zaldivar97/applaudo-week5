@@ -9,7 +9,7 @@ class PostCreateForm(forms.ModelForm):
                                 attrs={'placeholder': 'Title of the post'}
                             )
                             )
-    content = forms.CharField(label='', widget=forms.Textarea(), required=False)
+    content = forms.CharField(label='', widget=forms.Textarea(), required=False,)
     tags = forms.ModelMultipleChoiceField(
         queryset=Tag.objects,
         widget=forms.CheckboxSelectMultiple

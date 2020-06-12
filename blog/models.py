@@ -1,4 +1,5 @@
 from django.contrib.auth import get_user_model
+from django.db.models import Q
 from django.db.models.signals import pre_save
 from django.db import models
 from django.urls import reverse
@@ -20,13 +21,16 @@ class PostQuerySet(models.QuerySet):
     def most_popular(self):
         return self.filter(likes__gt=25)
 
+    def all_resumed(self):
+        return self.all()
+
 
 class PostModelManager(models.Manager):
     def get_queryset(self):
         return PostQuerySet(self.model, using=self._db)
 
     def all(self, *args, **kwargs):
-        qs = super().all(*args, **kwargs).filter(active=True)
+        qs = super().all(*args, **kwargs).filter(Q(active=True) & Q(approved=True))
         return qs
 
 
@@ -66,7 +70,7 @@ class Post(models.Model):
         return reverse("post_detail", kwargs={"slug": self.slug})
 
     class Meta:
-        ordering = ["id"]
+        ordering = ["-id"]
 
 
 class Comment(models.Model):
@@ -110,8 +114,9 @@ class CommentReport(models.Model):
 
 
 def pre_save_post(sender, instance, *args, **kwargs):
-    slug = slugify(instance.title)
-    instance.slug = slug
+    if not instance.slug:
+        slug = slugify(instance.title)
+        instance.slug = slug
 
 
 pre_save.connect(pre_save_post, sender=Post)

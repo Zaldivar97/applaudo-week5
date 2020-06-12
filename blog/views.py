@@ -1,7 +1,8 @@
-from django.views.generic import DetailView, ListView, CreateView, UpdateView
+from django.views.generic import DetailView, ListView, CreateView, UpdateView, DeleteView
 from django.views.generic.detail import BaseDetailView, TemplateResponseMixin
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponseRedirect
+from django.urls import reverse
 
 from .models import Post, Comment, CommentReport
 from .forms import PostCreateForm
@@ -16,7 +17,9 @@ class PostCreate(LoginRequiredMixin, CreateView):
 
     def form_valid(self, form):
         post = form.instance
-        post.user = self.request.user
+        user = self.request.user
+        post.user = user
+        self.success_url = reverse('profile-index', kwargs={'id': user.profile.id})
         return super().form_valid(form)
 
 
@@ -24,6 +27,17 @@ class PostUpdate(LoginRequiredMixin, UpdateView):
     model = Post
     template_name = 'blog/new_post.html'
     form_class = PostCreateForm
+
+    def form_valid(self, form):
+        user = self.request.user
+        form.instance.approved = False
+        self.success_url = reverse('profile-index', kwargs={'id': user.profile.id})
+        return super().form_valid(form)
+
+
+class PostDelete(LoginRequiredMixin, DeleteView):
+    model = Post
+    template_name = 'blog/delete.html'
 
 
 class PostListPopular(ListView):
@@ -53,10 +67,16 @@ class PostView(DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         user = self.request.user
+        post = self.get_object()
+        owner = self.is_owner(user, post)
         user_like_exists, post_exist_in_list = self.check_user(user)
         context['like_exists'] = user_like_exists
         context['post_exist_in_list'] = post_exist_in_list
+        context['owner'] = owner
         return context
+
+    def is_owner(self, user, post):
+        return user.id is post.user.id
 
     def verify_user_like(self, user):
         user_like_exists = self.object.like_by_user_exists(user)
@@ -69,8 +89,9 @@ class PostView(DetailView):
     def check_user(self, user):
         if user.is_authenticated:
             Comment.user_logged_id = user.id
-            return self.verify_user_like(user), \
-                   self.is_added_to_user_list(user)
+            return (self.verify_user_like(user),
+                    self.is_added_to_user_list(user)
+                    )
         Comment.user_logged_id = None
         return False
 
