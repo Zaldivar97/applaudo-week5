@@ -9,15 +9,13 @@ class ViewTest(TestCase):
     def test_login(self):
         response = self.c.post(
             reverse('signup'),
-            {'username':'name','password':'passw'}
-            )
-        print(response.__dict__)
+            {'username': 'name', 'password': 'passw'}
+        )
         self.assertEqual(response.status_code, 200)
-    
+
     def test_signup(self):
         response = self.c.post(
             reverse('signup'),
-            {'username':'name','password':'passw'}
-            )
+            {'username': 'name', 'password': 'passw'}
+        )
         self.assertEqual(response.status_code, 200)
-        
