@@ -39,6 +39,11 @@ class PostDelete(LoginRequiredMixin, DeleteView):
     model = Post
     template_name = 'blog/delete.html'
 
+    def get_success_url(self):
+        user = self.request.user
+        profile = user.profile
+        return profile.get_absolute_url()
+
 
 class PostListPopular(ListView):
     model = Post
